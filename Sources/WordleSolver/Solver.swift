@@ -32,8 +32,35 @@ public struct Solver {
         return word
     }
 
-    public func clue(for _: Word) -> Clue {
-        return Array(repeating: LetterClue.notInWord, count: solution.count)
+    public func clue(for guess: Word) -> Clue {
+        assert(guess.count == solution.count)
+
+        var result = Array(repeating: LetterClue.notInWord, count: solution.count)
+        var found = Array(repeating: false, count: solution.count)
+
+        // Find letters that are in the correct position.
+        for (index, letter) in guess.enumerated() {
+            if solution[index] == letter {
+                assert(!found[index])
+                found[index] = true
+                result[index] = .inPosition
+            }
+        }
+
+        // Find letters that are in the word but not in the correct position.
+        for (guessIndex, letter) in guess.enumerated() {
+            guard result[guessIndex] == .notInWord else { continue }
+            for solutionIndex in 0 ..< solution.count {
+                guard !found[solutionIndex] else { continue }
+                if solution[solutionIndex] == letter {
+                    found[solutionIndex] = true
+                    result[guessIndex] = .inWord
+                    break
+                }
+            }
+        }
+
+        return result
     }
 
     public func wordsMatching(clue _: Clue, for _: Word, in _: [Word]) -> [Word] {
