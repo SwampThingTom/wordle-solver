@@ -22,6 +22,19 @@ func play(wordList: [Word], solution: Word) {
 /// Picks a word from `validWords` to use as a guess.
 /// Returns the list of `validWords` that match the clue for that guess,
 /// or an empty array if the guess was correct.
-private func takeTurn(solver _: Solver, validWords _: [Word]) -> [Word] {
-    return []
+private func takeTurn(solver: Solver, validWords: [Word]) -> [Word] {
+    let guess = solver.bestWord(from: validWords)
+    let clue = solver.clue(for: guess)
+    print("Guess: \(format(guess: guess, clue: clue))")
+    guard clue != solver.solved else {
+        print("Solved!")
+        return []
+    }
+    let remainingWords = solver.wordsMatching(clue: clue, for: guess, in: validWords)
+    guard !remainingWords.isEmpty else { fatalError("No words match the clue for \(guess).") }
+    return remainingWords
+}
+
+private func format(guess: Word, clue: Clue) -> String {
+    return String(guess)
 }

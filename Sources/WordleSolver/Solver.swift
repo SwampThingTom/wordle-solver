@@ -24,4 +24,19 @@ public struct Solver {
         self.solution = solution
         solved = Array(repeating: LetterClue.inPosition, count: solution.count)
     }
+
+    public func bestWord(from wordList: [Word]) -> Word {
+        guard let word = wordList.randomElement() else {
+            fatalError("Unable to choose a word from \(wordList)")
+        }
+        return word
+    }
+
+    public func clue(for _: Word) -> Clue {
+        return Array(repeating: LetterClue.notInWord, count: solution.count)
+    }
+
+    public func wordsMatching(clue _: Clue, for _: Word, in _: [Word]) -> [Word] {
+        return []
+    }
 }
