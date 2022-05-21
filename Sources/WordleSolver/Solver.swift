@@ -4,27 +4,37 @@
 
 import Foundation
 
+/// A clue for a specific letter in a guess.
 public enum LetterClue {
     case notInWord, inWord, inPosition
 }
 
+/// A clue for all of the letters in a guess.
 public typealias Clue = [LetterClue]
 
+/// A word.
 public typealias Word = [Character]
 
+/// Returns a `Word` for a string.
 public func word(_ str: String) -> Word {
     Array(str.uppercased())
 }
 
+/// Provides the functionality used to solve a Wordle puzzle.
 public struct Solver {
+    /// The solution for the current puzzle.
     public let solution: Word
+
+    /// The `Clue` that indicates the puzzle was solved.
     public let solved: Clue
 
+    /// Returns an initialized `Solver` object.
     public init(solution: Word) {
         self.solution = solution
         solved = Array(repeating: LetterClue.inPosition, count: solution.count)
     }
 
+    /// Returns the best guess from a list of valid words.
     public func bestWord(from wordList: [Word]) -> Word {
         guard let word = wordList.randomElement() else {
             fatalError("Unable to choose a word from \(wordList)")
@@ -33,6 +43,7 @@ public struct Solver {
     }
 
     public func clue(for guess: Word) -> Clue {
+    /// Returns the clue for a guess.
         assert(guess.count == solution.count)
 
         var result = Array(repeating: LetterClue.notInWord, count: solution.count)
@@ -65,5 +76,6 @@ public struct Solver {
 
     public func wordsMatching(clue _: Clue, for _: Word, in _: [Word]) -> [Word] {
         return []
+    /// Returns the list of words that are valid next guesses for a given guess and its clue.
     }
 }
