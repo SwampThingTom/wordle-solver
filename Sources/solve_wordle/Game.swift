@@ -35,6 +35,25 @@ private func takeTurn(solver: Solver, validWords: [Word]) -> [Word] {
     return remainingWords
 }
 
+/// Return a formatted string that colors the letters in a guessed word based on the clue.
 private func format(guess: Word, clue: Clue) -> String {
-    return String(guess)
+    guess.enumerated().map { ($1, clue[$0]) }
+        .reduce("") { partialResult, letterClue in
+            "\(partialResult)\(letterClue.1.color)\(letterClue.0)"
+        } + LetterClue.resetColor
+}
+
+extension LetterClue {
+    static let notInWordColor = "\u{001B}[0;100m"
+    static let inWordColor = "\u{001B}[0;103m"
+    static let inPositionColor = "\u{001B}[42m"
+    static let resetColor = "\u{001B}[0m"
+
+    var color: String {
+        switch self {
+        case .notInWord: return Self.notInWordColor
+        case .inWord: return Self.inWordColor
+        case .inPosition: return Self.inPositionColor
+        }
+    }
 }
