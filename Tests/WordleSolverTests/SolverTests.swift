@@ -89,4 +89,47 @@ final class SolverTests: XCTestCase {
         let clue = Solver(solution: word("TWEET")).clue(for: word("DITTY"))
         XCTAssertEqual(clue, expected)
     }
+
+    func testWordsMatching_clueNoMatch() throws {
+        let expected = [
+            word("KLUTZ"), word("WITTY"), word("GUILD"), word("PULPY"), word("STOOD"),
+        ]
+        let possibleWords = [
+            word("KLUTZ"), word("AGONY"), word("THICK"), word("TASTE"), word("WITTY"),
+            word("SHORT"), word("ARISE"), word("GUILD"), word("MINOR"), word("CLASS"),
+            word("AMBER"), word("PULPY"), word("WRIST"), word("PLANT"), word("STOOD"),
+        ]
+        let guess = word("CREAM")
+        let clue = Array(repeating: LetterClue.notInWord, count: 5)
+        let matches = Solver(solution: word("GUILD")).wordsMatching(clue: clue, for: guess, in: possibleWords)
+        XCTAssertEqual(matches, expected)
+    }
+
+    func testWordsMatching_clueAnagram() throws {
+        let expected = [
+            word("RATES"), word("TARES"),
+        ]
+        let possibleWords = [
+            word("KLUTZ"), word("AGONY"), word("THICK"), word("TEARS"), word("WITTY"),
+            word("SHORT"), word("RATES"), word("TARES"), word("MINOR"), word("CLASS"),
+            word("AMBER"), word("PULPY"), word("WRIST"), word("PLANT"), word("STARE"),
+        ]
+        let guess = word("STARE")
+        let clue = Array(repeating: LetterClue.inWord, count: 5)
+        let matches = Solver(solution: word("RATES")).wordsMatching(clue: clue, for: guess, in: possibleWords)
+        XCTAssertEqual(matches, expected)
+    }
+
+    func testWordsMatching_clueMatch() throws {
+        let expected = [word("STARE")]
+        let possibleWords = [
+            word("KLUTZ"), word("AGONY"), word("THICK"), word("TEARS"), word("WITTY"),
+            word("SHORT"), word("RATES"), word("TARES"), word("MINOR"), word("CLASS"),
+            word("AMBER"), word("PULPY"), word("WRIST"), word("PLANT"), word("STARE"),
+        ]
+        let guess = word("STARE")
+        let clue = Array(repeating: LetterClue.inPosition, count: 5)
+        let matches = Solver(solution: word("STARE")).wordsMatching(clue: clue, for: guess, in: possibleWords)
+        XCTAssertEqual(matches, expected)
+    }
 }

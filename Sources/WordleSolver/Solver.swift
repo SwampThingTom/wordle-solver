@@ -42,8 +42,9 @@ public struct Solver {
         return word
     }
 
-    public func clue(for guess: Word) -> Clue {
     /// Returns the clue for a guess.
+    public func clue(for guess: Word, solution: Word? = nil) -> Clue {
+        let solution = solution ?? self.solution
         assert(guess.count == solution.count)
 
         var result = Array(repeating: LetterClue.notInWord, count: solution.count)
@@ -74,8 +75,8 @@ public struct Solver {
         return result
     }
 
-    public func wordsMatching(clue _: Clue, for _: Word, in _: [Word]) -> [Word] {
-        return []
     /// Returns the list of words that are valid next guesses for a given guess and its clue.
+    public func wordsMatching(clue: Clue, for guess: Word, in possibleWords: [Word]) -> [Word] {
+        possibleWords.filter { clue == self.clue(for: guess, solution: $0) }
     }
 }
