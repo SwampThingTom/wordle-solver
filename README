@@ -38,3 +38,18 @@ OPTIONS:
   --all                   Solve all possible puzzles.
   -h, --help              Show help information.
 ```
+
+## Version Info
+
+Wordle Solver is under active development.
+
+### Version 0.1
+
+The `bestWord(from:)` function simply chooses a random word from the remaining word list.
+
+Running `solve-wordle --all` produced:
+
+```
+It took an average of 4.1 turns to solve all Wordles.
+48 puzzles were not solved.
+```
