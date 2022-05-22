@@ -12,8 +12,8 @@ let package = Package(
             name: "WordleSolver",
             targets: ["WordleSolver"]),
         .executable(
-            name: "solve_wordle",
-            targets: ["solve_wordle"]),
+            name: "solve-wordle",
+            targets: ["solve-wordle"]),
     ],
     dependencies: [
         .package(
@@ -22,7 +22,7 @@ let package = Package(
     ],
     targets: [
         .target(name: "WordleSolver"),
-        .target(name: "solve_wordle", dependencies: [
+        .target(name: "solve-wordle", dependencies: [
             "WordleSolver",
             .product(name: "ArgumentParser", package: "swift-argument-parser")
         ]),

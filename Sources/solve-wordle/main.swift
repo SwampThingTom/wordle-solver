@@ -6,7 +6,7 @@ import ArgumentParser
 import Foundation
 import WordleSolver
 
-struct Repeat: ParsableCommand {
+struct SolveWordle: ParsableCommand {
     @Argument(help: "The solution to use for the puzzle.")
     var solutionString: String?
 
@@ -56,4 +56,4 @@ struct Repeat: ParsableCommand {
     }
 }
 
-Repeat.main()
+SolveWordle.main()
