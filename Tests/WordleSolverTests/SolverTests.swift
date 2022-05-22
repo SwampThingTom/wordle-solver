@@ -25,6 +25,7 @@ final class SolverTests: XCTestCase {
     }
 
     func testBestGuess_wordleBot() throws {
+        // Taken from a real solution evaluated by the NYT WordleBot.
         let expected = word("OLDEN")
         let possibleWords = [
             "QUEEN", "OLDEN", "NOVEL", "MODEM", "LUMEN", "KNEEL", "GOOEY", "EMBED", "DOZEN", "DOWEL",
@@ -32,6 +33,38 @@ final class SolverTests: XCTestCase {
             "VOWEL", "GOLEM", "BOWEL", "LEVEL", "JEWEL", "EXPEL", "BEZEL", "BEVEL", "MODEL",
         ].map(word(_:))
         let bestWord = Solver(solution: word("MONEY")).bestWord(from: possibleWords)
+        XCTAssertEqual(bestWord, expected)
+    }
+
+    func testBestGuess_noFirstGuess_isFirstGuess() throws {
+        // "short", "arise", and "wrist" are all equally good but "short" appears first.
+        let expected = word("SHORT")
+        let possibleWords = [
+            "KLUTZ", "AGONY", "THICK", "TASTE", "WITTY", "SHORT", "ARISE", "GUILD", "MINOR", "CLASS",
+            "AMBER", "PULPY", "WRIST", "PLANT", "STOOD",
+        ].map(word(_:))
+        let bestWord = Solver(solution: word("GUILD")).bestWord(from: possibleWords, isFirstGuess: true)
+        XCTAssertEqual(bestWord, expected)
+    }
+
+    func testBestGuess_hasFirstGuess_isNotFirstGuess() throws {
+        // "short", "arise", and "wrist" are all equally good but "short" appears first.
+        let expected = word("SHORT")
+        let possibleWords = [
+            "KLUTZ", "AGONY", "THICK", "TASTE", "WITTY", "SHORT", "ARISE", "GUILD", "MINOR", "CLASS",
+            "AMBER", "PULPY", "WRIST", "PLANT", "STOOD",
+        ].map(word(_:))
+        let bestWord = Solver(solution: word("GUILD"), firstWord: word("STARE")).bestWord(from: possibleWords, isFirstGuess: false)
+        XCTAssertEqual(bestWord, expected)
+    }
+
+    func testBestGuess_hasFirstGuess_isFirstGuess() throws {
+        let expected = word("STARE")
+        let possibleWords = [
+            "KLUTZ", "AGONY", "THICK", "TASTE", "WITTY", "SHORT", "ARISE", "GUILD", "MINOR", "CLASS",
+            "AMBER", "PULPY", "WRIST", "PLANT", "STOOD",
+        ].map(word(_:))
+        let bestWord = Solver(solution: word("GUILD"), firstWord: word("STARE")).bestWord(from: possibleWords, isFirstGuess: true)
         XCTAssertEqual(bestWord, expected)
     }
 

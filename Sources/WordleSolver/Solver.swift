@@ -25,17 +25,24 @@ public struct Solver {
     /// The solution for the current puzzle.
     public let solution: Word
 
+    /// The first word to use when solving the puzzle.
+    /// When `nil`, the first word is determined by trying all possible words
+    /// against all possible solutions.
+    public let firstWord: Word?
+
     /// The clue that indicates the puzzle was solved.
     public let solved: Clue
 
     /// Returns an initialized `Solver` object.
-    public init(solution: Word) {
+    public init(solution: Word, firstWord: Word? = nil) {
         self.solution = solution
+        self.firstWord = firstWord
         solved = Array(repeating: LetterClue.inPosition, count: solution.count)
     }
 
     /// Returns the best guess from a list of valid words.
-    public func bestWord(from wordList: [Word]) -> Word {
+    public func bestWord(from wordList: [Word], isFirstGuess: Bool = false) -> Word {
+        if isFirstGuess, let firstWord = firstWord { return firstWord }
         guard var bestGuess = wordList.first else { fatalError("Word list is empty.") }
         if wordList.count == 1 { return bestGuess }
 
