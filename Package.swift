@@ -15,9 +15,17 @@ let package = Package(
             name: "solve_wordle",
             targets: ["solve_wordle"]),
     ],
+    dependencies: [
+        .package(
+            url: "https://github.com/apple/swift-argument-parser",
+            from: "1.0.0"),
+    ],
     targets: [
         .target(name: "WordleSolver"),
-        .target(name: "solve_wordle", dependencies: ["WordleSolver"]),
+        .target(name: "solve_wordle", dependencies: [
+            "WordleSolver",
+            .product(name: "ArgumentParser", package: "swift-argument-parser")
+        ]),
         .testTarget(name: "WordleSolverTests", dependencies: ["WordleSolver"]),
     ]
 )
