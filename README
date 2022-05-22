@@ -2,9 +2,39 @@ Wordle Solver does just what you'd expect.
 
 ## Building
 
-To build, run:
+To build:
 
 ```
 swift build
 ```
 
+The binary will be placed in the `./build` directory.
+
+## Run Tests
+
+To run tests:
+
+```
+swift test
+```
+
+## Running
+
+To run Wordle Solver:
+
+```
+.build/debug/solve-wordle
+```
+
+Wordle Solver has a few command line options.
+
+```
+USAGE: solve-wordle [<solution-string>] [--all]
+
+ARGUMENTS:
+  <solution-string>       The solution to use for the puzzle.
+
+OPTIONS:
+  --all                   Solve all possible puzzles.
+  -h, --help              Show help information.
+```
