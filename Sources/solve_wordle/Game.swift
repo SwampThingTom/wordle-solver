@@ -6,28 +6,32 @@ import Foundation
 import WordleSolver
 
 /// Attempts to guess the solution from the list of words.
-func play(wordList: [Word], solution: Word) {
+/// Returns the number of turns it took to solve.
+func play(wordList: [Word], solution: Word, quiet: Bool = false) -> Int {
     let solver = Solver(solution: solution)
     var remainingWords = wordList
     var turn = 0
     repeat {
         turn += 1
-        print("Turn #\(turn)")
-        print("There \(remainingWords.count == 1 ? "is 1 word" : "are \(remainingWords.count) words") left.")
-        remainingWords = takeTurn(solver: solver, validWords: remainingWords)
+        if !quiet {
+            print("Turn #\(turn)")
+            print("There \(remainingWords.count == 1 ? "is 1 word" : "are \(remainingWords.count) words") left.")
+        }
+        remainingWords = takeTurn(solver: solver, validWords: remainingWords, quiet: quiet)
     } while !remainingWords.isEmpty
-    print("Solved in \(turn) \(turn == 1 ? "turn" : "turns")")
+    return turn
 }
 
 /// Picks a word from `validWords` to use as a guess.
 /// Returns the list of `validWords` that match the clue for that guess,
 /// or an empty array if the guess was correct.
-private func takeTurn(solver: Solver, validWords: [Word]) -> [Word] {
+private func takeTurn(solver: Solver, validWords: [Word], quiet: Bool) -> [Word] {
     let guess = solver.bestWord(from: validWords)
     let clue = solver.clue(for: guess)
-    print("Guess: \(format(guess: guess, clue: clue))")
+    if !quiet {
+        print("Guess: \(format(guess: guess, clue: clue))")
+    }
     guard clue != solver.solved else {
-        print("Solved!")
         return []
     }
     let remainingWords = solver.wordsMatching(clue: clue, for: guess, in: validWords)
