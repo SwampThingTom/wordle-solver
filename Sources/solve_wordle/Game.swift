@@ -13,7 +13,7 @@ func play(wordList: [Word], solution: Word) {
     repeat {
         turn += 1
         print("Turn #\(turn)")
-        print("There are \(remainingWords.count) words left.")
+        print("There \(remainingWords.count == 1 ? "is 1 word" : "are \(remainingWords.count) words") left.")
         remainingWords = takeTurn(solver: solver, validWords: remainingWords)
     } while !remainingWords.isEmpty
     print("Solved in \(turn) \(turn == 1 ? "turn" : "turns")")
