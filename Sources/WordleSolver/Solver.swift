@@ -28,21 +28,21 @@ public struct Solver {
     /// The first word to use when solving the puzzle.
     /// When `nil`, the first word is determined by trying all possible words
     /// against all possible solutions.
-    public let firstWord: Word?
+    public let startWord: Word?
 
     /// The clue that indicates the puzzle was solved.
     public let solved: Clue
 
     /// Returns an initialized `Solver` object.
-    public init(solution: Word, firstWord: Word? = nil) {
+    public init(solution: Word, startWord: Word? = nil) {
         self.solution = solution
-        self.firstWord = firstWord
+        self.startWord = startWord
         solved = Array(repeating: LetterClue.inPosition, count: solution.count)
     }
 
     /// Returns the best guess from a list of valid words.
     public func bestWord(from wordList: [Word], isFirstGuess: Bool = false) -> Word {
-        if isFirstGuess, let firstWord = firstWord { return firstWord }
+        if isFirstGuess, let startWord = startWord { return startWord }
         guard var bestGuess = wordList.first else { fatalError("Word list is empty.") }
         if wordList.count == 1 { return bestGuess }
 

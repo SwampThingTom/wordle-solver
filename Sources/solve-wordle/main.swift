@@ -10,6 +10,9 @@ struct SolveWordle: ParsableCommand {
     @Argument(help: "The solution to use for the puzzle.")
     var solutionString: String?
 
+    @Option(help: "The word to use as a first guess.")
+    var start: String?
+
     @Flag(help: "Solve all possible puzzles.")
     var all = false
 
@@ -18,16 +21,25 @@ struct SolveWordle: ParsableCommand {
         return word(solutionString)
     }
 
+    var startWord: Word? {
+        guard let start = start else { return nil }
+        return word(start)
+    }
+
     mutating func run() throws {
         let allWords = readWordList().map(word(_:))
 
         guard !all else {
-            playAllSolutions(wordList: allWords)
+            playAllSolutions(wordList: allWords, startWord: startWord)
             return
         }
 
         let solution = self.solution ?? allWords.randomElement()!
-        let turns = play(wordList: allWords, solution: solution)
+        playSingleGame(wordList: allWords, solution: solution, startWord: startWord)
+    }
+
+    func playSingleGame(wordList: [Word], solution: Word, startWord _: Word?) {
+        let turns = play(wordList: wordList, solution: solution, startWord: startWord)
         if turns < 7 {
             print("Solved in \(turns) \(turns == 1 ? "turn" : "turns.")")
         } else {
@@ -35,11 +47,11 @@ struct SolveWordle: ParsableCommand {
         }
     }
 
-    func playAllSolutions(wordList: [Word]) {
+    func playAllSolutions(wordList: [Word], startWord _: Word?) {
         var totalTurns = 0
         var unsolved = 0
         for solution in wordList {
-            let turns = play(wordList: wordList, solution: solution, quiet: true)
+            let turns = play(wordList: wordList, solution: solution, startWord: startWord, quiet: true)
             totalTurns += turns
             if turns > 6 {
                 unsolved += 1

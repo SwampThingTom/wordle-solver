@@ -7,8 +7,9 @@ import WordleSolver
 
 /// Attempts to guess the solution from the list of words.
 /// Returns the number of turns it took to solve.
-func play(wordList: [Word], solution: Word, quiet: Bool = false) -> Int {
-    let solver = Solver(solution: solution, firstWord: word("RAISE"))
+func play(wordList: [Word], solution: Word, startWord: Word? = nil, quiet: Bool = false) -> Int {
+    let startWord = startWord ?? word("RAISE")
+    let solver = Solver(solution: solution, startWord: startWord)
     var remainingWords = wordList
     var turn = 0
     repeat {

@@ -36,7 +36,7 @@ final class SolverTests: XCTestCase {
         XCTAssertEqual(bestWord, expected)
     }
 
-    func testBestGuess_noFirstGuess_isFirstGuess() throws {
+    func testBestGuess_noStartWord_isFirstGuess() throws {
         // "short", "arise", and "wrist" are all equally good but "short" appears first.
         let expected = word("SHORT")
         let possibleWords = [
@@ -47,24 +47,24 @@ final class SolverTests: XCTestCase {
         XCTAssertEqual(bestWord, expected)
     }
 
-    func testBestGuess_hasFirstGuess_isNotFirstGuess() throws {
+    func testBestGuess_hasStartWord_isNotFirstGuess() throws {
         // "short", "arise", and "wrist" are all equally good but "short" appears first.
         let expected = word("SHORT")
         let possibleWords = [
             "KLUTZ", "AGONY", "THICK", "TASTE", "WITTY", "SHORT", "ARISE", "GUILD", "MINOR", "CLASS",
             "AMBER", "PULPY", "WRIST", "PLANT", "STOOD",
         ].map(word(_:))
-        let bestWord = Solver(solution: word("GUILD"), firstWord: word("STARE")).bestWord(from: possibleWords, isFirstGuess: false)
+        let bestWord = Solver(solution: word("GUILD"), startWord: word("STARE")).bestWord(from: possibleWords, isFirstGuess: false)
         XCTAssertEqual(bestWord, expected)
     }
 
-    func testBestGuess_hasFirstGuess_isFirstGuess() throws {
+    func testBestGuess_hasStartWord_isFirstGuess() throws {
         let expected = word("STARE")
         let possibleWords = [
             "KLUTZ", "AGONY", "THICK", "TASTE", "WITTY", "SHORT", "ARISE", "GUILD", "MINOR", "CLASS",
             "AMBER", "PULPY", "WRIST", "PLANT", "STOOD",
         ].map(word(_:))
-        let bestWord = Solver(solution: word("GUILD"), firstWord: word("STARE")).bestWord(from: possibleWords, isFirstGuess: true)
+        let bestWord = Solver(solution: word("GUILD"), startWord: word("STARE")).bestWord(from: possibleWords, isFirstGuess: true)
         XCTAssertEqual(bestWord, expected)
     }
 
