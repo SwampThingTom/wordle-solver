@@ -43,6 +43,10 @@ struct SolveWordle: ParsableCommand {
         }
 
         let solution = self.solution ?? allWords.randomElement()!
+        guard allWords.contains(solution) else {
+            print("Sorry, '\(String(solution))' is not a valid Wordle solution.")
+            return
+        }
         playSingleGame(wordList: allWords, solution: solution, startWord: startWord)
     }
 
