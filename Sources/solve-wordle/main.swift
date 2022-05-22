@@ -16,6 +16,9 @@ struct SolveWordle: ParsableCommand {
     @Flag(help: "Solve all possible puzzles.")
     var all = false
 
+    @Flag(help: "Solve best start word.")
+    var bestStart = false
+
     var solution: Word? {
         guard let solutionString = solutionString else { return nil }
         return word(solutionString)
@@ -28,6 +31,11 @@ struct SolveWordle: ParsableCommand {
 
     mutating func run() throws {
         let allWords = readWordList().map(word(_:))
+
+        guard !bestStart else {
+            findBestStartWord(wordList: allWords)
+            return
+        }
 
         guard !all else {
             playAllSolutions(wordList: allWords, startWord: startWord)

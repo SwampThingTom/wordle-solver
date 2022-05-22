@@ -5,6 +5,12 @@
 import Foundation
 import WordleSolver
 
+func findBestStartWord(wordList: [Word]) {
+    guard let solution = wordList.first else { fatalError("No words in word list.") }
+    let bestStartWord = Solver(solution: solution).bestWord(from: wordList)
+    print("The best start word according to the current heuristic is '\(String(bestStartWord))'.")
+}
+
 /// Attempts to guess the solution from the list of words.
 /// Returns the number of turns it took to solve.
 func play(wordList: [Word], solution: Word, startWord: Word? = nil, quiet: Bool = false) -> Int {
