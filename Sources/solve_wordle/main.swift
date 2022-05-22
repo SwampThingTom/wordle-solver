@@ -5,10 +5,10 @@
 import Foundation
 import WordleSolver
 
-let allWords = [
-    "KLUTZ", "AGONY", "THICK", "TASTE", "WITTY",
-    "SHORT", "ARISE", "GUILD", "MINOR", "CLASS",
-    "AMBER", "PULPY", "WRIST", "PLANT", "STOOD",
-].map(word)
+let allWords = readWordList().map(word(_:))
 
 play(wordList: allWords, solution: allWords.randomElement()!)
+
+func readWordList() -> [String] {
+    try! String(contentsOfFile: "Resources/wordle-list.txt", encoding: .utf8).components(separatedBy: .newlines)
+}
