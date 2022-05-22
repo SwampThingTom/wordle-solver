@@ -6,6 +6,35 @@
 import XCTest
 
 final class SolverTests: XCTestCase {
+    func testBestGuess() throws {
+        // "short", "arise", and "wrist" are all equally good but "short" appears first.
+        let expected = word("SHORT")
+        let possibleWords = [
+            "KLUTZ", "AGONY", "THICK", "TASTE", "WITTY", "SHORT", "ARISE", "GUILD", "MINOR", "CLASS",
+            "AMBER", "PULPY", "WRIST", "PLANT", "STOOD",
+        ].map(word(_:))
+        let bestWord = Solver(solution: word("GUILD")).bestWord(from: possibleWords)
+        XCTAssertEqual(bestWord, expected)
+    }
+
+    func testBestGuess_oneOption() throws {
+        let expected = word("SHORT")
+        let possibleWords = [word("SHORT")]
+        let bestWord = Solver(solution: word("SHORT")).bestWord(from: possibleWords)
+        XCTAssertEqual(bestWord, expected)
+    }
+
+    func testBestGuess_wordleBot() throws {
+        let expected = word("OLDEN")
+        let possibleWords = [
+            "QUEEN", "OLDEN", "NOVEL", "MODEM", "LUMEN", "KNEEL", "GOOEY", "EMBED", "DOZEN", "DOWEL",
+            "DOPEY", "BLEEP", "BLEED", "UNWED", "KNEED", "BONEY", "MONEY", "WOVEN", "WOMEN", "WOKEN",
+            "VOWEL", "GOLEM", "BOWEL", "LEVEL", "JEWEL", "EXPEL", "BEZEL", "BEVEL", "MODEL",
+        ].map(word(_:))
+        let bestWord = Solver(solution: word("MONEY")).bestWord(from: possibleWords)
+        XCTAssertEqual(bestWord, expected)
+    }
+
     func testClue_noMatch() throws {
         let expected = Array(repeating: LetterClue.notInWord, count: 5)
         let clue = Solver(solution: word("BROAD")).clue(for: word("CLIME"))

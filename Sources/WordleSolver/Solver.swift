@@ -25,7 +25,7 @@ public struct Solver {
     /// The solution for the current puzzle.
     public let solution: Word
 
-    /// The `Clue` that indicates the puzzle was solved.
+    /// The clue that indicates the puzzle was solved.
     public let solved: Clue
 
     /// Returns an initialized `Solver` object.
@@ -36,10 +36,37 @@ public struct Solver {
 
     /// Returns the best guess from a list of valid words.
     public func bestWord(from wordList: [Word]) -> Word {
-        guard let word = wordList.randomElement() else {
-            fatalError("Unable to choose a word from \(wordList)")
+        guard var bestGuess = wordList.first else { fatalError("Word list is empty.") }
+        if wordList.count == 1 { return bestGuess }
+
+        var leastRemainingSolutions = Int.max
+        for guess in wordList {
+            var groups = [Clue: Int]()
+            for solution in wordList {
+                let clue = clue(for: guess, solution: solution)
+                let totalCount = groups[clue] ?? 0
+                groups[clue] = totalCount + 1
+            }
+            // Each group represents the number of times a particular clue appeared across all possible solutions.
+            // So to calculate the remaining solutions, sum the squares of each count.
+            let remainingSolutions = groups.reduce(0) { $0 + $1.1 * $1.1 }
+            // print("'\(guess)' has \(remainingSolutions) remaining solutions.")
+            if remainingSolutions < leastRemainingSolutions {
+                bestGuess = guess
+                leastRemainingSolutions = remainingSolutions
+            }
         }
-        return word
+
+        return bestGuess
+    }
+
+    /// Returns the average number of remaining words if the given word is guessed for each possible solution.
+    private func averageRemainingWords(for word: Word, in wordList: [Word]) -> Double {
+        let totalRemainingWords = wordList.reduce(0) { result, _ in
+            let remainingWords = wordsMatching(clue: clue(for: word), for: word, in: wordList)
+            return result + remainingWords.count
+        }
+        return Double(totalRemainingWords) / Double(wordList.count)
     }
 
     /// Returns the clue for a guess.
