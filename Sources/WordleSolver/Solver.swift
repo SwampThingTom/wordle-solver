@@ -67,15 +67,6 @@ public struct Solver {
         return bestGuess
     }
 
-    /// Returns the average number of remaining words if the given word is guessed for each possible solution.
-    private func averageRemainingWords(for word: Word, in wordList: [Word]) -> Double {
-        let totalRemainingWords = wordList.reduce(0) { result, _ in
-            let remainingWords = wordsMatching(clue: clue(for: word), for: word, in: wordList)
-            return result + remainingWords.count
-        }
-        return Double(totalRemainingWords) / Double(wordList.count)
-    }
-
     /// Returns the clue for a guess.
     public func clue(for guess: Word, solution: Word? = nil) -> Clue {
         let solution = solution ?? self.solution
