@@ -5,6 +5,8 @@
 import Foundation
 import WordleSolver
 
+let DefaultStartWord = word("TRACE")
+
 func findBestStartWord(wordList: [Word]) {
     guard let solution = wordList.first else { fatalError("No words in word list.") }
     let bestStartWord = Solver(solution: solution).bestWord(from: wordList)
@@ -14,7 +16,7 @@ func findBestStartWord(wordList: [Word]) {
 /// Attempts to guess the solution from the list of words.
 /// Returns the number of turns it took to solve.
 func play(wordList: [Word], solution: Word, startWord: Word? = nil, quiet: Bool = false) -> Int {
-    let startWord = startWord ?? word("RAISE")
+    let startWord = startWord ?? DefaultStartWord
     let solver = Solver(solution: solution, startWord: startWord)
     var remainingWords = wordList
     var turn = 0
