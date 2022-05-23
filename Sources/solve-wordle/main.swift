@@ -19,6 +19,9 @@ struct SolveWordle: ParsableCommand {
     @Flag(help: "Solve best start word.")
     var bestStart = false
 
+    @Flag(help: "Show verbose text when solving.")
+    var verbose = false
+
     var solution: Word? {
         guard let solutionString = solutionString else { return nil }
         return word(solutionString)
@@ -51,7 +54,7 @@ struct SolveWordle: ParsableCommand {
     }
 
     func playSingleGame(wordList: [Word], solution: Word, startWord _: Word?) {
-        let turns = play(wordList: wordList, solution: solution, startWord: startWord)
+        let turns = play(wordList: wordList, solution: solution, startWord: startWord, verbose: verbose)
         if turns < 7 {
             print("Solved in \(turns) \(turns == 1 ? "turn" : "turns.")")
         } else {
