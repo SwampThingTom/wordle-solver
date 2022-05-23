@@ -63,7 +63,7 @@ struct SolveWordle: ParsableCommand {
         var totalTurns = 0
         var unsolved = 0
         for solution in wordList {
-            let turns = play(wordList: wordList, solution: solution, startWord: startWord, quiet: true)
+            let turns = play(wordList: wordList, solution: solution, startWord: startWord, verbose: false)
             totalTurns += turns
             if turns > 6 {
                 unsolved += 1

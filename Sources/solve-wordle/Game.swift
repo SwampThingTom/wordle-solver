@@ -15,18 +15,18 @@ func findBestStartWord(wordList: [Word]) {
 
 /// Attempts to guess the solution from the list of words.
 /// Returns the number of turns it took to solve.
-func play(wordList: [Word], solution: Word, startWord: Word? = nil, quiet: Bool = false) -> Int {
+func play(wordList: [Word], solution: Word, startWord: Word? = nil, verbose: Bool = true) -> Int {
     let startWord = startWord ?? DefaultStartWord
     let solver = Solver(solution: solution, startWord: startWord)
     var remainingWords = wordList
     var turn = 0
     repeat {
         turn += 1
-        if !quiet {
+        if verbose {
             print("Turn #\(turn)")
             print("There \(remainingWords.count == 1 ? "is only 1 word" : "are \(remainingWords.count) words") left.")
         }
-        remainingWords = takeTurn(solver: solver, validWords: remainingWords, turn: turn, quiet: quiet)
+        remainingWords = takeTurn(solver: solver, validWords: remainingWords, turn: turn)
     } while !remainingWords.isEmpty
     return turn
 }
@@ -34,12 +34,10 @@ func play(wordList: [Word], solution: Word, startWord: Word? = nil, quiet: Bool 
 /// Picks a word from `validWords` to use as a guess.
 /// Returns the list of `validWords` that match the clue for that guess,
 /// or an empty array if the guess was correct.
-private func takeTurn(solver: Solver, validWords: [Word], turn: Int, quiet: Bool) -> [Word] {
+private func takeTurn(solver: Solver, validWords: [Word], turn: Int) -> [Word] {
     let guess = solver.bestWord(from: validWords, isFirstGuess: turn == 1)
     let clue = solver.clue(for: guess)
-    if !quiet {
-        print("Guess: \(format(guess: guess, clue: clue))")
-    }
+    print(format(guess: guess, clue: clue))
     guard clue != solver.solved else {
         return []
     }
