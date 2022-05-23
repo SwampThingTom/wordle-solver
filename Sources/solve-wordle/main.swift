@@ -54,9 +54,12 @@ struct SolveWordle: ParsableCommand {
     }
 
     func playSingleGame(wordList: [Word], solution: Word, startWord _: Word?) {
-        let turns = play(wordList: wordList, solution: solution, startWord: startWord, verbose: verbose)
-        if turns < 7 {
-            print("Solved in \(turns) \(turns == 1 ? "turn" : "turns.")")
+        let result = play(wordList: wordList, solution: solution, startWord: startWord, verbose: verbose)
+        if !verbose {
+            print()
+            print(formatShareableResult(result))
+        } else if result.count <= 6 {
+            print("Solved in \(result.count) \(result.count == 1 ? "turn" : "turns.")")
         } else {
             print("Failed to solve Wordle in 6 turns.")
         }
@@ -66,7 +69,7 @@ struct SolveWordle: ParsableCommand {
         var totalTurns = 0
         var unsolved = 0
         for solution in wordList {
-            let turns = play(wordList: wordList, solution: solution, startWord: startWord, verbose: false)
+            let turns = play(wordList: wordList, solution: solution, startWord: startWord, verbose: false).count
             totalTurns += turns
             if turns > 6 {
                 unsolved += 1

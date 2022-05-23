@@ -15,35 +15,50 @@ func findBestStartWord(wordList: [Word]) {
 
 /// Attempts to guess the solution from the list of words.
 /// Returns the number of turns it took to solve.
-func play(wordList: [Word], solution: Word, startWord: Word? = nil, verbose: Bool = true) -> Int {
+func play(wordList: [Word], solution: Word, startWord: Word? = nil, verbose: Bool = true) -> [(Word, Clue)] {
     let startWord = startWord ?? DefaultStartWord
     let solver = Solver(solution: solution, startWord: startWord)
     var remainingWords = wordList
+    var result = [(Word, Clue)]()
     var turn = 0
-    repeat {
+    while true {
         turn += 1
         if verbose {
             print("Turn #\(turn)")
             print("There \(remainingWords.count == 1 ? "is only 1 word" : "are \(remainingWords.count) words") left.")
         }
-        remainingWords = takeTurn(solver: solver, validWords: remainingWords, turn: turn)
-    } while !remainingWords.isEmpty
-    return turn
+
+        let guess = solver.bestWord(from: remainingWords, isFirstGuess: turn == 1)
+        let clue = solver.clue(for: guess)
+        print(format(guess: guess, clue: clue))
+        result.append((guess, clue))
+        if clue == solver.solved {
+            break
+        }
+
+        remainingWords = solver.wordsMatching(clue: clue, for: guess, in: remainingWords)
+        guard !remainingWords.isEmpty else { fatalError("No words match the clue for \(guess).") }
+    }
+    return result
 }
 
-/// Picks a word from `validWords` to use as a guess.
-/// Returns the list of `validWords` that match the clue for that guess,
-/// or an empty array if the guess was correct.
-private func takeTurn(solver: Solver, validWords: [Word], turn: Int) -> [Word] {
-    let guess = solver.bestWord(from: validWords, isFirstGuess: turn == 1)
-    let clue = solver.clue(for: guess)
-    print(format(guess: guess, clue: clue))
-    guard clue != solver.solved else {
-        return []
-    }
-    let remainingWords = solver.wordsMatching(clue: clue, for: guess, in: validWords)
-    guard !remainingWords.isEmpty else { fatalError("No words match the clue for \(guess).") }
-    return remainingWords
+/// Returns a Wordle shareable game result.
+/// Wordle 338 4/6
+/// ⬛⬛⬛⬛🟩
+/// ⬛⬛🟨⬛🟩
+/// ⬛🟩🟩🟩🟩
+/// 🟩🟩🟩🟩🟩
+func formatShareableResult(_ game: [(Word, Clue)]) -> String {
+    "WordleSolver \(turns(for: game))/6\n\n" +
+        game[0 ..< min(game.count, 6)].map { shareableClue($0.1) }.joined(separator: "\n")
+}
+
+private func shareableClue(_ clue: Clue) -> String {
+    clue.map { $0.sharable }.joined()
+}
+
+private func turns(for game: [(Word, Clue)]) -> String {
+    return game.count <= 6 ? String(game.count) : "x"
 }
 
 /// Return a formatted string that colors the letters in a guessed word based on the clue.
@@ -65,6 +80,14 @@ extension LetterClue {
         case .notInWord: return Self.notInWordColor
         case .inWord: return Self.inWordColor
         case .inPosition: return Self.inPositionColor
+        }
+    }
+
+    var sharable: String {
+        switch self {
+        case .notInWord: return "⬛"
+        case .inWord: return "🟨"
+        case .inPosition: return "🟩"
         }
     }
 }
