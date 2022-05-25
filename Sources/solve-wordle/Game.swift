@@ -15,10 +15,10 @@ func findBestStartWord(wordList: [Word]) {
 
 /// Attempts to guess the solution from the list of words.
 /// Returns the number of turns it took to solve.
-func play(wordList: [Word], solution: Word, startWord: Word? = nil, verbose: Bool = true) -> [(Word, Clue)] {
+func play(puzzle: Puzzle, startWord: Word? = nil, verbose: Bool = true) -> [(Word, Clue)] {
     let startWord = startWord ?? DefaultStartWord
-    let solver = Solver(solution: solution, startWord: startWord)
-    var remainingWords = wordList
+    let solver = Solver(solution: puzzle.solution, startWord: startWord)
+    var remainingWords = puzzle.solutions
     var result = [(Word, Clue)]()
     var turn = 0
     while true {
@@ -43,13 +43,13 @@ func play(wordList: [Word], solution: Word, startWord: Word? = nil, verbose: Boo
 }
 
 /// Returns a Wordle shareable game result.
-/// Wordle 338 4/6
+/// WordleSolver 338 4/6
 /// ⬛⬛⬛⬛🟩
 /// ⬛⬛🟨⬛🟩
 /// ⬛🟩🟩🟩🟩
 /// 🟩🟩🟩🟩🟩
-func formatShareableResult(_ game: [(Word, Clue)]) -> String {
-    "WordleSolver \(turns(for: game))/6\n\n" +
+func formatShareableResult(_ game: [(Word, Clue)], puzzleNumber: Int) -> String {
+    "WordleSolver \(puzzleNumber) \(turns(for: game))/6\n\n" +
         game[0 ..< min(game.count, 6)].map { shareableClue($0.1) }.joined(separator: "\n")
 }
 
