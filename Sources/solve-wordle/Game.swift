@@ -71,8 +71,8 @@ private func format(guess: Word, clue: Clue) -> String {
 
 extension LetterClue {
     static let notInWordColor = "\u{001B}[0;100m"
-    static let inWordColor = "\u{001B}[0;103m"
-    static let inPositionColor = "\u{001B}[42m"
+    static let inWordColor = "\u{001B}[48;5;178m"
+    static let inPositionColor = "\u{001B}[48;5;34m"
     static let resetColor = "\u{001B}[0m"
 
     var color: String {
