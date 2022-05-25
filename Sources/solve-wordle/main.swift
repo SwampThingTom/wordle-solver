@@ -13,6 +13,9 @@ struct SolveWordle: ParsableCommand {
     @Option(help: "The word to use as a first guess.")
     var start: String?
 
+    @Flag(help: "Use original Wordle solutions.")
+    var wardle = false
+
     @Flag(help: "Solve all possible puzzles.")
     var all = false
 
@@ -82,7 +85,15 @@ struct SolveWordle: ParsableCommand {
     }
 
     func readWordList() -> [String] {
-        try! String(contentsOfFile: "Resources/wordle-list.txt", encoding: .utf8).components(separatedBy: .newlines)
+        if wardle {
+            print("Using original Wordle solutions.")
+        }
+        let filename = wardle ? "Resources/wordle-list-original.txt" : "Resources/wordle-list-nyt.txt"
+        do {
+            return try String(contentsOfFile: filename, encoding: .utf8).components(separatedBy: .newlines)
+        } catch {
+            fatalError("Unable to read word list: '\(filename)'.\n\(error)")
+        }
     }
 }
 
